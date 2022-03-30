@@ -19,6 +19,7 @@ package org.tensorflow.lite.examples.classification;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -49,6 +50,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -93,6 +95,8 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior sheetBehavior;
   protected TextView recognitionTextView;
+
+  private Button convertBtn, aboutBtn;
 //      recognition1TextView,
 //      recognition2TextView,
 //      recognition1ValueTextView,
@@ -167,6 +171,30 @@ public abstract class CameraActivity extends AppCompatActivity
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
 //    bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
     thresholdValueTextView = findViewById(R.id.threshold_value);
+    convertBtn = findViewById(R.id.convertBtn);
+    aboutBtn = findViewById(R.id.aboutBtn);
+
+    aboutBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(CameraActivity.this, About.class));
+      }
+    });
+
+    convertBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(CameraActivity.this, ConversionActivity.class);
+
+        if (recognitionTextView.getText().toString().equals("none")) {
+          intent.putExtra("money", "0");
+        } else {
+          intent.putExtra("money", recognitionTextView.getText().toString());
+        }
+//        Toast.makeText(CameraActivity.this, ""+recognitionTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+      }
+    });
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
