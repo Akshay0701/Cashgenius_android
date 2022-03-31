@@ -122,7 +122,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private Device device = Device.CPU;
   private int numThreads = 1;
 
-//  private TextToSpeech textToSpeech;
+  private TextToSpeech textToSpeech;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -160,6 +160,17 @@ public abstract class CameraActivity extends AppCompatActivity
 //        }
 //      }
 //    });
+
+
+    textToSpeech = new TextToSpeech(CameraActivity.this, (TextToSpeech.OnInitListener) i -> {
+
+      // if No error is found then only it will run
+      if(i!=TextToSpeech.ERROR){
+        // To Choose language of speech
+        textToSpeech.setLanguage(Locale.UK);
+      }
+    });
+
 
 //    threadsTextView = findViewById(R.id.threads);
 //    plusImageView = findViewById(R.id.plus);
@@ -624,8 +635,12 @@ public abstract class CameraActivity extends AppCompatActivity
             if(recognition.getTitle().equals("none")){
                 //do nothing
             }else{
-              if (recognition.getConfidence() != null && recognition.getConfidence() * 100 > threshold) {}
-                // todo textToSpeech.speak(recognition.getTitle(), TextToSpeech.QUEUE_FLUSH, null);
+              if (recognition.getConfidence() != null && recognition.getConfidence() * 100 > threshold) {
+                if(!textToSpeech.isSpeaking()) {
+                  textToSpeech.speak(recognition.getTitle(), TextToSpeech.QUEUE_FLUSH, null);
+                }
+              }
+
             }
         }
 
